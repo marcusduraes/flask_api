@@ -16,9 +16,9 @@ def index():
 @app.route("/<int:user_id>", methods=["GET"])
 def get_by_id(user_id):
     with session as ss:
-        users = ss.query(User).all()
-        users_dict = [{'id': user.id, 'name': user.name, 'role': user.role} for user in users]
-        user = next((i for i in users_dict if i["id"] == user_id), None)
+        user_not_serialized = ss.query(User).filter(User.id == user_id)
+        user_dict = [{'id': user.id, 'name': user.name, 'role': user.role} for user in user_not_serialized]
+        user = next((i for i in user_dict if i["id"] == user_id), None)
         if user:
             return make_response(jsonify(user), 200)
         else:
